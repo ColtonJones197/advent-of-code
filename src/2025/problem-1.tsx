@@ -3,8 +3,9 @@ import combinationData from './combination.txt?raw';
 
 /**
  * This contains all the logic for solving problem 1.
+ * countStops is here for part 2 of the problem. If the pointer ever passes 0 it should count it as a zero.
 */
-function figureOutProblem1(): number {
+function figureOutProblem1(countStops: boolean = false): number {
    const combination = readTheCombination();
    let position = 50;
    let zeroCount = 0;
@@ -13,8 +14,14 @@ function figureOutProblem1(): number {
    for (const instruction of combination) {
       const turn = parseInstruction(instruction);
       position += turn;
-      while(position < floor) position += ceiling + 1;
-      while(position > ceiling) position -= ceiling + 1;
+      while(position < floor) {
+         position += ceiling + 1;
+         if(countStops && position !== 0) zeroCount++;
+      }
+      while(position > ceiling) {
+         position -= ceiling + 1;
+         if(countStops && position !== 0) zeroCount++;
+      }
       if(position === 0) {
          zeroCount++;
       }
@@ -45,11 +52,14 @@ function parseInstruction(instruction: string): number {
 export const Problem1: React.FC = () => {
 
    const answer = figureOutProblem1();
+   const hardAnswer = figureOutProblem1(true);
+
 
    return (
       <div>
          <h2>Problem 1</h2>
-         <p>I got this answer: {answer}</p>
+         <p>Part 1: {answer}</p>
+         <p>Part 2: {hardAnswer}</p>
       </div>
    );
 }
